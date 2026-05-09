@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Women Safety AI</title>
+</head>
+<body style="text-align:center; font-family:Arial;">
+
+    <h1>🚨 Women Safety System</h1>
+
+    <!-- CAMERA -->
+    <h2>📷 Camera</h2>
+    <video id="video" width="300" autoplay></video>
+    <br><br>
+    <button onclick="startCamera()">Start Camera</button>
+
+    <!-- VOICE -->
+    <h2>🎤 Voice Detection</h2>
+    <button onclick="startVoice()">Start Listening</button>
+
+    <p id="status"></p>
+
+    <script>
+        // -------- CAMERA --------
+        function startCamera() {
+            navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => {
+                document.getElementById("video").srcObject = stream;
+            })
+            .catch(err => {
+                alert("Camera access denied!");
+            });
+        }
+
+        // -------- VOICE --------
+        function startVoice() {
+            const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            recognition.lang = "en-US";
+
+            recognition.onstart = () => {
+                document.getElementById("status").innerText = "Listening...";
+            };
+
+            recognition.onresult = (event) => {
+                let text = event.results[0][0].transcript.toLowerCase();
+                document.getElementById("status").innerText = "You said: " + text;
+
+                if (text.includes("save me") || text.includes("help")) {
+                    alert("🚨 Emergency Detected!");
+                }
+            };
+
+            recognition.start();
+        }
+    </script>
+
+</body>
+</html>
